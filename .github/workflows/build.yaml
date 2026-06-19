@@ -4,7 +4,7 @@ env:
   #### An dieser Stelle müssen eure persönlichen Umgebungsvariablen eingetragen werden
   # Tipp: Die Token/der API-Key werden als Secrets in den Repository-Settings eingetragen und hier referenziert.
   # Test
-  GITHUB_ACCESSTOKEN: ${{ secrets.GITHUB_ACCESSTOKEN }}
+  GITHUB_ACCESSTOKEN: ${{ secrets.PET_CLINIC_SECRET }}
 jobs:
   compile:
     name: Compile
@@ -26,9 +26,9 @@ jobs:
           ./mvnw clean package
 
           # 2. Bei Docker einloggen (Nutzt das verschlüsselte Secret aus den Env-Variablen oben)
-          echo "${{ env.GITHUB_ACCESSTOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          docker login ghcr.io -u ${{ github.actor }} -p $GITHUB_ACCESSTOKEN
 
-          # 3. Das bereitgestellte Dockerfile bauen (wichtig: kleingeschrieben!)
+          # 3. Das bereitgestellte Dockerfile bauen (kleingeschrieben!)
           docker build -t ghcr.io/scheuffen/petclinic:latest .
 
           # 4. Das Docker-Image in die GitHub-Package-Registry pushen
